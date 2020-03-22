@@ -1,2 +1,6 @@
-online-forum : https://forum.golangbridge.org/
-compiler : https://golang.org/dl/
+Online-forum : https://forum.golangbridge.org/
+Compiler : https://golang.org/dl/
+Description of at least one major project coded in this language: Inner Network Library in Go 
+Link: https ://github.com/golang/net
+Language Reference Manual: https://golang.org/doc/
+Website that discusses Go: https://talks.golang.org/
