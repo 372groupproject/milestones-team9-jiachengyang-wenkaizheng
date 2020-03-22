@@ -26,8 +26,6 @@ func readJson(path string) ([]byte, error) {
 }
 
 func main() {
-	fmt.Println("Hello World")
-
 	var c network
 
 	content, err := readJson(configPATH)

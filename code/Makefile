@@ -1,6 +1,14 @@
-main:
-	go build main.go
-	./main
+all:halloWorld readJson
+
+halloWorld:
+	go build halloWorld.go
+	./halloWorld
+
+readJson:
+	go build readJson.go
+	./readJson
+
 clean:
-	rm -f main
+	rm -f halloWorld
+	rm -f readJson
 	rm -f *.o
