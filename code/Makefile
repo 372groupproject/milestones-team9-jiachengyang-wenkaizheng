@@ -1,14 +1,14 @@
-all:halloWorld readJson
+all:helloWorld readJson
 
-halloWorld:
-	go build halloWorld.go
-	./halloWorld
+helloWorld : helloWorld.go
+	go build helloWorld.go
+	./helloWorld
 
-readJson:
+readJson: readJson.go
 	go build readJson.go
 	./readJson
 
 clean:
-	rm -f halloWorld
+	rm -f helloWorld
 	rm -f readJson
 	rm -f *.o

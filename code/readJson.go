@@ -1,3 +1,9 @@
+// Copyright (c) 2016-2020, Regents of the University of Arizona.
+// Author:Wenkai Zheng<wenkaizheng@email.arizona.edu>
+//        JiaCheng Yang <jiachengyang@email.arizona.edu>
+// Read the network configuration file from json format
+// Save data as a struct
+// Print all data out in one line
 package main
 
 import (
@@ -6,7 +12,6 @@ import (
 	"io/ioutil"
 	"os"
 )
-
 type network struct {
 	Server     string `json:"server"`
 	ServerPort int    `json:"server_port"`
