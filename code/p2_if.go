@@ -10,9 +10,9 @@ import (
 
 func normalIf(variable int) {
 	if variable%2 == 0 {
-		fmt.Println("Type3 is even")
+		fmt.Println("normalIf: is even")
 	} else {
-		fmt.Println("Type3 is odd")
+		fmt.Println("normalIf: is odd")
 	}
 }
 
