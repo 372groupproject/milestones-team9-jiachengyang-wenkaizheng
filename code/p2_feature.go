@@ -25,7 +25,7 @@ func Hello() {
 func World() {
 	<-ch3
 	for i := 0; i < 10; i++ {
-		fmt.Print("Wrold \n")
+		fmt.Print("World \n")
 		if i == 9 {
 			break
 		}
