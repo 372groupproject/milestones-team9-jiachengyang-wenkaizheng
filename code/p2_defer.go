@@ -13,6 +13,8 @@ func deferPrintln() int {
 	defer func() { fmt.Println("two") }()
 	defer func() { fmt.Println("one") }()
 
+	fmt.Println("zero")
+
 	return 1
 }
 
