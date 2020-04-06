@@ -24,8 +24,15 @@ func forAsWhile() {
 	}
 	fmt.Printf("forAsWhile: sum is %d\n", sum)
 }
+func forRange(){
+    for i, char := range "abcdef"{
+        fmt.Printf("Index %d is %s\n",i,string(char));
+
+    }
+}
 
 func main() {
 	normalFor()
-	forAsWhile()
+    forAsWhile()
+    forRange()
 }
