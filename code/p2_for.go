@@ -13,7 +13,7 @@ func normalFor() {
 	for i := 0; i < 10; i++ {
 		sum += i
 	}
-	fmt.Printf("Type1 sum is %d\n", sum)
+	fmt.Printf("normalFor: sum is %d\n", sum)
 }
 func forAsWhile() {
 	var i int = 0
@@ -22,7 +22,7 @@ func forAsWhile() {
 		sum += i
 		i++
 	}
-	fmt.Printf("Type2 sum is %d\n", sum)
+	fmt.Printf("forAsWhile: sum is %d\n", sum)
 }
 
 func main() {
