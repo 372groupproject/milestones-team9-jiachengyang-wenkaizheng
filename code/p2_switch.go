@@ -13,7 +13,7 @@ func normalSwitch(i int) {
 	case 0:
 		fmt.Println("normalSwitch: case 0")
 	case 1:
-		fmt.Println("normalSwitch:  case 1")
+		fmt.Println("normalSwitch: case 1")
 	default:
 		fmt.Println("normalSwitch: default")
 	}
@@ -32,7 +32,37 @@ func switchAsIfElseIF(variable int) {
 		fmt.Println("variable is not divisible by 2, 3, 5 or 7")
 	}
 }
+
+func switchWithAList(variable int) {
+	switch variable {
+	case 2, 3, 5, 7:
+		fmt.Println("variable is a prime less than 10")
+	default:
+		fmt.Println("variable is not a prime less than 10")
+	}
+}
+
+func switchWithFallthrough(variable int) {
+	switch variable {
+	case 2:
+		fmt.Println("variable is a prime less than 3")
+		fallthrough
+	case 3:
+		fmt.Println("variable is a prime less than 4")
+		fallthrough
+	case 5:
+		fmt.Println("variable is a prime less than 6")
+		fallthrough
+	case 7:
+		fmt.Println("variable is a prime less than 10")
+	default:
+		fmt.Println("variable is not a prime less than 10")
+	}
+}
+
 func main() {
 	normalSwitch(0)
 	switchAsIfElseIF(0)
+	switchWithAList(2)
+	switchWithFallthrough(2)
 }
