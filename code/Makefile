@@ -1,4 +1,4 @@
-all : p2 helloWorld readJson if for defer switch
+all : p2 helloWorld readJson if for defer switch label
 p2 : p2_feature.go
 	go build p2_feature.go
 	./p2_feature
@@ -14,6 +14,9 @@ defer : p2_defer.go
 switch : p2_switch.go
 	go build p2_switch.go
 	./p2_switch
+label: p2_label.go
+	go build p2_label.go
+	./p2_label
 helloWorld : helloWorld.go
 	go build helloWorld.go
 	./helloWorld
