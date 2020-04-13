@@ -1,16 +1,16 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+)
 
-func rune_operation(){
-  // byte
-  var p7 rune = 66
-  p7 -=1;
-  if p7 == 'A'{
-      fmt.Println("They have the same value")
-  }
-  fmt.Printf("%c\n",p7)
+func rune_operation() {
+	// byte
+	var p8 rune = 'は'
+	fmt.Printf("%#U %+q %c\n", p8, p8, p8)
+	fmt.Println(strconv.QuoteRuneToASCII(p8))
 }
 func main() {
-   rune_operation()
+	rune_operation()
 }
