@@ -1,12 +1,12 @@
 package main
 
 import (
-	
-	"os"
-	"log"
 	"fmt"
+	"log"
+	"os"
 )
-func main(){
+
+func main() {
 	file, err := os.Open("no exist")
 	if err != nil {
 		log.Fatal(err)
