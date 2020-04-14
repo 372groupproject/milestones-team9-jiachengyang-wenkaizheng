@@ -1,10 +1,13 @@
-We are going to implement internet proxies based on Shadowsocks.
-Shadowsocks is an encrypted transmission protocol based on Socks5 proxy. 
-Its main function is to enhance the privacy for users when they are using the internet.
-The implementation design will be below
-user -> client/local proxy -> server proxy -> real server  
-user <- client/local proxy <- server proxy <- real server  
-We encode and decode the Internet traffic data between our proxies, and data packets we send/receive will be formatted based one Socks5.
-Each Proxy will listen to the traffic from two sides, and keep reading and receiving data.
-We expect there should be 500 lines of code.
-This project can illustrate the advantage of GO because Go is very helpful when the programmer needs to do the Multithreading Programming
+We are going to implement internet proxies based on Shadowsocks protocol, which is an encrypted transmission based on Socks5 proxy.
+Its main goal is to enhance users' privacy when they are using the internet and avoid censorship.
+We expect the program to have at least four packages: core, client, server, and encryption.
+Core will contains useful functions to deal with Socks5 protocol.
+Client and server will use the functions in core.
+Encryption will have functions for encryption.
+The implementation design will be below:
+user -> client/local proxy --encrypted--> server proxy -> real server
+user <- client/local proxy <--encrypted-- server proxy <- real server
+We encrypt the Internet traffic data between our proxies, and data packets we send/receive will be formatted based on Socks5.
+Each proxy will listen to the traffic from two sides and keep reading and receiving data.
+We expect 500 lines of code.
+This project can illustrate the advantage of GO because a proxy needs to deal with considerable amount of data, and Go has the ability to run multiple goroutines as they are very efficient and cheap.
