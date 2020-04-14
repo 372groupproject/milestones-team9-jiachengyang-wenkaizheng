@@ -21,6 +21,11 @@ func String() {
 	p += "abc"
 	fmt.Println(p)
 	fmt.Println(len(p))
+	p = "English中文日本語"
+	for i, c := range p {
+		fmt.Printf("%d , %c\n", i, c)
+
+	}
 }
 func main() {
 	String()
