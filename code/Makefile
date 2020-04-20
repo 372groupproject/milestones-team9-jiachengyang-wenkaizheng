@@ -1,4 +1,6 @@
-all : p2_feature helloWorld readJson p2_if p2_for p2_defer p2_switch p2_label p3_string p3_int p3_float p3_list p3_map p3_array p3_byte p3_rune p3_feature p3_struct p3_interface
+GOPATH=$(shell pwd)
+LIB=./src/Heap/Heap.go
+all : p2_feature helloWorld readJson p2_if p2_for p2_defer p2_switch p2_label p3_string p3_int p3_float p3_list p3_map p3_array p3_byte p3_rune p3_feature p3_struct p3_interface myMain
 p2_feature : p2_feature.go 
 	go build p2_feature.go
 	./p2_feature
@@ -56,6 +58,9 @@ p3_struct : p3_struct.go
 p3_interface : p3_interface.go
 	go build p3_interface.go
 	./p3_interface
+myMain : src/main/p4_heapSort.go $(LIB)
+	GOPATH=$(GOPATH) go build -o myMain main
+	./myMain
 clean:
 	rm -f helloWorld
 	rm -f readJson
@@ -76,4 +81,5 @@ clean:
 	rm -f p3_feature
 	rm -f p3_struct
 	rm -f p3_interface
+	rm -f myMain
 	rm -f *.o
