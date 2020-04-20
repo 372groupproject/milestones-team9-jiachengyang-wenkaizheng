@@ -11,7 +11,7 @@ We will use some network protocol analyzers when demoing our program so that our
 We are also planning to show it in real-world usage. For example, we can use it to bypass a firewall.
 
 3. As said above, we are going to mainly use code in our project, but code for each milestone may also be used for explaining the language.
-4. As said above, a network protocol analyzer is needed. We are using wireshake right now, but we may switch to another one when demoing our program
+4. As said above, a network protocol analyzer is needed. We are using wireshark right now, but we may switch to another one when demoing our program
 For the real-world usage, we are going to test whether our program can bypass the firewall in China,
 but I am not confident in it since the firewall has been upgraded for detecting network traffic through shadowsocks protocol.
 
