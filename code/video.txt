@@ -1,10 +1,18 @@
-1.We want to show our project to all audiences. 
-2 The main ideal for this project will be below
-user -> client/local proxy --encrypted--> server proxy -> real server
-user <- client/local proxy <--encrypted-- server proxy <- real server
-We also have multiple thread to handle different requests occur (https,http)
-3.We will show the codes from encyrption table in our project.
-4.We will also show our code from server proxy,local proxy and tranfer part which includes thread control,network protocol and network traffic.
-5.We are trying to compile our code into a exe file for window users. //todo how to demo  (zoom or slides)
-6..We want to used zoom and slides to shoot it.
+1. We will introduce golang and our project.
+2. In the 1st part of our video, we will briefly introduce golang.
+Because its syntax is similar to C, which most of us are familiar with,
+we are going to focus on some unique features of golang, such as gorountine and interface.
+I expect to spend 1-2 minutes for this part.
 
+In the 2nd part of our video, we will talk about our program.
+Since it is related to network, which many of our classmates may only have a little knowledge about, I expect to spend one minute to explain it.
+After that, I plan to take about 2-3 minutes to show our code and then demo our program.
+We will use some network protocol analyzers when demoing our program so that our audience can see what is happening.
+We are also planning to show it in real-world usage. For example, we can use it to bypass a firewall.
+
+3. As said above, we are going to mainly use code in our project, but code for each milestone may also be used for explaining the language.
+4. As said above, a network protocol analyzer is needed. We are using wireshake right now, but we may switch to another one when demoing our program
+For the real-world usage, we are going to test whether our program can bypass the firewall in China,
+but I am not confident in it since the firewall has been upgraded for detecting network traffic through shadowsocks protocol.
+
+5. We want to used zoom and slides to shoot it.
