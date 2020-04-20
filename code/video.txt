@@ -1,0 +1,10 @@
+1.We want to show our project to all audiences. 
+2 The main ideal for this project will be below
+user -> client/local proxy --encrypted--> server proxy -> real server
+user <- client/local proxy <--encrypted-- server proxy <- real server
+We also have multiple thread to handle different requests occur (https,http)
+3.We will show the codes from encyrption table in our project.
+4.We will also show our code from server proxy,local proxy and tranfer part which includes thread control,network protocol and network traffic.
+5.We are trying to compile our code into a exe file for window users. //todo how to demo  (zoom or slides)
+6..We want to used zoom and slides to shoot it.
+
