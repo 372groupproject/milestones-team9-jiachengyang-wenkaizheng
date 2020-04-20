@@ -1,4 +1,5 @@
-Book: "Introducing Go: Build Reliable, Scalable Programs"
+Book1: "Introducing Go: Build Reliable, Scalable Programs"
+Book2: "An Introduction to Programming in Go" https://www.golang-book.com/books/intro
 Language Reference Manual: https://golang.org/doc/
 Website that discusses Go: https://talks.golang.org/
 Online-forum: https://forum.golangbridge.org/
