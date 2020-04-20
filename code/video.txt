@@ -15,4 +15,4 @@ We are also planning to show it in real-world usage. For example, we can use it 
 For the real-world usage, we are going to test whether our program can bypass the firewall in China,
 but I am not confident in it since the firewall has been upgraded for detecting network traffic through shadowsocks protocol.
 
-5. We want to used zoom and slides to shoot it.
+5. We want to use zoom and slides to shoot it.
