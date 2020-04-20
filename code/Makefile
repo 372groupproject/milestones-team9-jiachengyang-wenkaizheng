@@ -1,7 +1,7 @@
 GOPATH=$(shell pwd)
-LIB=./src/Heap/Heap.go
+LIB=./src/heap/heap.go
 LIB1 =./src/subhelper/subhelper.go
-all : p2_feature helloWorld readJson p2_if p2_for p2_defer p2_switch p2_label p3_string p3_int p3_float p3_list p3_map p3_array p3_byte p3_rune p3_feature p3_struct p3_interface myMain p4_subroutine subpackage p4_subclass
+all : p2_feature helloWorld readJson p2_if p2_for p2_defer p2_switch p2_label p3_string p3_int p3_float p3_list p3_map p3_array p3_byte p3_rune p3_feature p3_struct p3_interface heapsort p4_subroutine subpackage p4_subclass
 p2_feature : p2_feature.go 
 	go build p2_feature.go
 	./p2_feature
@@ -59,9 +59,9 @@ p3_struct : p3_struct.go
 p3_interface : p3_interface.go
 	go build p3_interface.go
 	./p3_interface
-myMain : src/main/p4_heapSort.go $(LIB)
-	GOPATH=$(GOPATH) go build -o myMain main
-	./myMain
+heapsort : src/main/p4_heapSort.go $(LIB)
+	GOPATH=$(GOPATH) go build -o heapsort main
+	./heapsort
 p4_subroutine : p4_subroutine.go
 	go build p4_subroutine.go
 	./p4_subroutine
@@ -91,7 +91,7 @@ clean:
 	rm -f p3_feature
 	rm -f p3_struct
 	rm -f p3_interface
-	rm -f myMain
+	rm -f heapsort
 	rm -f p4_subroutine
 	rm -f subpackage
 	rm -f p4_subclass
