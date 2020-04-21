@@ -1,8 +1,8 @@
 This project is a simple version of shadowsocks software in Golang.  
 
 Our approach is to create two proxies for network transfer (Server and Local).  
-Usually, when users visit websites, their computers will performance DNS lookup for server IP 
-for getting mac address and then do the TCP handshake for establishing a network connection. 
+Usually, when users visit websites, their computers will performance DNS lookup for server IP, 
+ARP request or ARP cache for getting mac address and then do the TCP handshake for establishing a network connection. 
 Finally, they will send requests(https or http).  
 
 This whole process can be done by user applications and servers, so basically we have 2 nodes.   
