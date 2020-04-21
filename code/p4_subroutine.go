@@ -3,50 +3,55 @@
 //        JiaCheng Yang <jiachengyang@email.arizona.edu>
 // different main thread and sub thread
 package main
+
 import (
-  //  "runtime"
-    "fmt"
-   
+	//  "runtime"
+	"fmt"
+	"math"
 )
 
-func Even(){
-   for i:=0;i<10;i+=2{
-	  fmt.Printf("Even thread is running with %d\n",i)
-      if i == 8{
-          ch3 <-0
-          break;
-      }
-      ch3 <-0
-      <- ch4
-      
-            
-    }
-   ch1 <- 0 
+func producer(ch, complete chan int) {
+	for i := 2; i < 1000; i++ {
+		ch <- i
+	}
+	close(ch)
+	complete <- 1
 }
-func Odd(){
-   <- ch3
-   for i:=1;i<10;i+=2{
-      fmt.Printf("Odd thread is running with %d\n",i)
-      if i == 9{
-          break
-      }
-      ch4 <- 0
-      <- ch3
 
-            
-    }
-   ch2 <- 0 
+func consumer(ch, complete chan int) {
+	for {
+		v, ok := <-ch
+		if !ok {
+			complete <- 1
+			return
+		}
+		if isFact(v) {
+			fmt.Println(v)
+		}
+	}
+
 }
-var ch3 = make(chan int)
-var ch4 = make(chan int)
-var ch1 =  make(chan int)
-var ch2 = make(chan int)
+
+func isFact(n int) bool {
+	bound := int(math.Ceil(math.Pow(float64(n), 0.5)))
+	for i := 2; i <= bound; i++ {
+		if n != i && n%i == 0 {
+			return false
+		}
+	}
+	return true
+}
+
 func main() {
-  
-  go Even()
-  go Odd()
-  <-ch1
-  <- ch2
-  fmt.Println("All subthread finished work")
+	var ch1 = make(chan int, 10)
+	var ch2 = make(chan int)
+
+	go producer(ch1, ch2)
+	go consumer(ch1, ch2)
+	go consumer(ch1, ch2)
+	<-ch2
+	<-ch2
+	<-ch2
+	fmt.Println("All subthread finished work")
 
 }
