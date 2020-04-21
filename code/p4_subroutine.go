@@ -11,7 +11,7 @@ import (
 )
 
 func producer(ch, complete chan int) {
-	for i := 2; i < 1000; i++ {
+	for i := 2; i < 10000; i++ {
 		ch <- i
 	}
 	close(ch)
@@ -43,7 +43,7 @@ func isFact(n int) bool {
 }
 
 func main() {
-	var ch1 = make(chan int, 10)
+	var ch1 = make(chan int)
 	var ch2 = make(chan int)
 
 	go producer(ch1, ch2)
