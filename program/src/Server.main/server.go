@@ -139,15 +139,18 @@ func main() {
 	}()
 
 	// todo comment
-	var count int = 0
+	//var count int = 0
+	ipMap := make(map[string]int)
+	var ip string = ""
 	for {
 		localTcpConn, err := tcpListener.AcceptTCP()
+		ip =  localTcpConn.RemoteAddr().String()
 		if err != nil {
 			Logging.NormalLogger.Println("encounter error when accepting TCP")
 			Logging.ErrorLogger.Println(err)
 			return
 		}
-		if count == 0 {
+		if _, exist := ipMap[ip]; !exist {
 			//sign in user
 			if rc, err := signInUser(localTcpConn); rc == false || err != nil {
 				Logging.NormalLogger.Println("could not sign in user")
@@ -159,7 +162,8 @@ func main() {
 				Logging.NormalLogger.Println("could not get encryption table")
 				Logging.ErrorLogger.Fatal(err)
 			}
-			count += 1
+			//count += 1
+			ipMap[ip] = 1
 		}
 		if err := shakeHand(localTcpConn, proxy); err != nil {
 			Logging.NormalLogger.Println("could not shake hands")
