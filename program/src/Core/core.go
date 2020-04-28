@@ -69,54 +69,29 @@ func WriteAll(buffer []byte, socket *net.TCPConn, size int) (int, error) {
 
 func Transfer(proxy *Proxy, conn1, conn2 *net.TCPConn, device, types int) {
 	for {
-		Logging.NormalLogger.Println("encode arr", proxy.EncryptionTable.GetEncodeArr())
-		Logging.NormalLogger.Println("decode arr", proxy.EncryptionTable.GetDecodeArr())
 		request := make([]byte, 256)
 		readLen, err := conn1.Read(request)
-		// we need to use proxy to
 		if err != nil {
-			Logging.NormalLogger.Println(*proxy, "device and types", device, types, "got an error when reading request", "get length", readLen)
-			Logging.ErrorLogger.Println(err)
 			break
 		}
 		// connection close by user
 		if readLen == 0 {
-			Logging.NormalLogger.Println(*proxy, "device and types", device, types, "connection closed by user")
 			break
 		}
-
-		Logging.NormalLogger.Println(request)
-		// if it is local and works as a server
-		// or if it is server and works as a client
 		if (device == Local && types == type0) || (device == Server && types == type1) {
 			request = proxy.EncryptionTable.Encode(request)
-			Logging.NormalLogger.Print(*proxy, "device and types", device, types, "got encoded request")
-			Logging.NormalLogger.Println(request)
 		}
-		// if it is a local and works as a client
-		// or it is a server and works as a server
-
 		if (device == Local && types == type1) || (device == Server && types == type0) {
 			request = proxy.EncryptionTable.Decode(request)
-			Logging.NormalLogger.Print(*proxy, "device and types", device, types, "got decoded request ")
-			Logging.NormalLogger.Println(request)
 		}
-
-		// we send this byte to sp
 		writeLength, err := conn2.Write(request[0:readLen])
 		if err != nil {
-			Logging.NormalLogger.Println(*proxy, "device and types", device, types, "got an error when writing request")
-			Logging.ErrorLogger.Println(err)
 			break
 		}
 		for writeLength != readLen {
-			Logging.NormalLogger.Println(*proxy, "device and types", device, types, "going to write request")
 			if writeLength != readLen {
-				Logging.NormalLogger.Println(*proxy, "device and types", device, types, "write length != readLen")
 				twiceLength, err := conn2.Write(request[writeLength:readLen])
 				if err != nil {
-					Logging.NormalLogger.Println(*proxy, "device and types", device, types, "got an error when writing request")
-					Logging.ErrorLogger.Println(err)
 					break
 				}
 				writeLength += twiceLength
