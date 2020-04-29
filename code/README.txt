@@ -11,3 +11,7 @@ It supports input from both stdin and command line. You can run it as ./p3_featu
 these two threads are done.
 9. src include p4_heapSort which is a mildly useful program to sort a list of integer. 
 10. src also include the P4_subpackage which shows how to use sub class in main class
+11. P5_swap shows the different useages of swap integers.
+12. P5_struct_pointer shows the how pointer works in go.
+13. P5_atomic shows the actomic operation between different threads.
+14. All feature is above.
