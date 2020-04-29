@@ -1,7 +1,7 @@
 GOPATH=$(shell pwd)
 LIB=./src/heap/heap.go
 LIB1 =./src/subhelper/subhelper.go
-all : p2_feature helloWorld readJson p2_if p2_for p2_defer p2_switch p2_label p3_string p3_int p3_float p3_list p3_map p3_array p3_byte p3_rune p3_feature p3_struct p3_interface heapsort p4_subroutine subpackage p4_subclass
+all : p2_feature helloWorld readJson p2_if p2_for p2_defer p2_switch p2_label p3_string p3_int p3_float p3_list p3_map p3_array p3_byte p3_rune p3_feature p3_struct p3_interface heapsort p4_subroutine subpackage p4_subclass p5_atomic p5_swap p5_struct_pointer
 p2_feature : p2_feature.go 
 	go build p2_feature.go
 	./p2_feature
@@ -71,6 +71,15 @@ subpackage : src/submain/p4_subpackage.go $(LIB1)
 p4_subclass : p4_subclass.go
 	go build p4_subclass.go
 	./p4_subclass
+p5_atomic : p5_atomic.go
+	go build p5_atomic.go
+	./p5_atomic
+p5_swap : p5_swap.go
+	go build p5_swap.go
+	./p5_swap
+p5_struct_pointer: p5_struct_pointer.go
+	go build p5_struct_pointer.go
+	./p5_struct_pointer
 clean:
 	rm -f helloWorld
 	rm -f readJson
