@@ -35,7 +35,7 @@ How to set up chrome and run each proxy :
   wenkaizheng@email.arizona.edu
   jiachengyang@email.arizona.edu
   we will send you a new config json file
-- we also support different version executable file (make windows, mac or linux). Which means user can use without Go compiler.
+- we also support different version executable file (make windows, mac or linux). Which means user can use local proxy without Go compiler.
 - do not forget to run local proxy before run server proxy
 
 Browsers will send specific network packets to local proxy, and then local proxy transfers them to sever proxy.
