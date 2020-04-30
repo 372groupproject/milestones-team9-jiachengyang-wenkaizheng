@@ -16,7 +16,7 @@ When a user initiates local proxy, it will send username and password, and then 
 For matters of security, we only store sha512 values of salted usernames and salted passwords.
 After authentication steps, local proxy will send encode and decode table (256-byte array) to server proxy for future encryption usage.   
 When handling requests from user applications and responds from read servers, we use multiple go-routines so that we handel each request simultaneously.  
-
+We also have heartbeat message mechanism to detect user is online or offline, and we will close session if user is offline.
 
 For users part, they need to set up their chrome with socks5 protocol.   
 Socks5 : https://tools.ietf.org/html/rfc1928  
