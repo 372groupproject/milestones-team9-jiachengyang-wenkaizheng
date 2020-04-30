@@ -1,18 +1,20 @@
-// Copyright (c) 2016-2020, Regents of the University of Arizona.
-// Author:Wenkai Zheng<wenkaizheng@email.arizona.edu>
-//        JiaCheng Yang <jiachengyang@email.arizona.edu>
-// Read the network configuration file from json format
-// Save data as a struct
-// Print all data out in one line
+/**
+  Author: JiaCheng Yang && Wenkai Zheng
+  This file is used for config file parser
+  It reads config json file byte array
+  For future use
+**/
 package FileParser
 
 import (
+	"Logging"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"os"
 )
-
+/**
+  This function simply read json into a byte array
+**/
 func readJson(path string) ([]byte, error) {
 	f, err := os.Open(path)
 	if err != nil {
@@ -20,16 +22,18 @@ func readJson(path string) ([]byte, error) {
 	}
 	return ioutil.ReadAll(f)
 }
-
+/**
+   This function will save all info from json to interface
+**/
 func GetJasonConfig(configPATH string, c interface{}) error {
 	content, err := readJson(configPATH)
 	if err != nil {
-		fmt.Println("Cannot open " + configPATH + " : " + err.Error())
+		Logging.NormalLogger.Println("Cannot open " + configPATH + " : " + err.Error())
 		return err
 	}
 	err = json.Unmarshal([]byte(content), c)
 	if err != nil {
-		fmt.Println("ERROR: ", err.Error())
+		Logging.NormalLogger.Println("ERROR: ", err.Error())
 		return err
 	}
 	return nil

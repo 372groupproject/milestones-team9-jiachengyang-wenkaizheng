@@ -1,3 +1,8 @@
+/**
+  Author: JiaCheng Yang && Wenkai Zheng
+  This file is used for getting entry form CSV
+  For future use
+**/
 package FileParser
 
 import (
@@ -6,11 +11,15 @@ import (
 	"io"
 	"os"
 )
-
+/**
+   Simple interface for adding method 
+**/
 type addable interface {
 	Add(...interface{})
 }
-
+/**
+  This function will read CSV line by line and add it to interface
+**/
 func GetCSV(fileName string, record addable) {
 	f, err := os.Open(fileName)
 	if err != nil {
@@ -26,7 +35,6 @@ func GetCSV(fileName string, record addable) {
 		}
 		if err != nil {
 			Logging.NormalLogger.Println("encounter error while reading " + fileName)
-			Logging.NormalLogger.Println()
 			Logging.ErrorLogger.Fatal(err)
 		}
 

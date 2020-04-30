@@ -1,32 +1,46 @@
+/**
+  Author: JiaCheng Yang && Wenkai Zheng
+  This file is used for Proxy struct
+  All constructor, methods and setter getter are defined in here
+**/
 package Core
 
 import (
-	"Encryption"
-	"Logging"
 	"encoding/binary"
-	"math/rand"
+	"errors"
 	"net"
-	"time"
 )
 
+/**
+   Local Proxy need to have both localhost and server/remote host
+   Device is used for distinguishing server or local
+**/
 type Proxy struct {
-	LocalHost       *net.TCPAddr
-	ServerHost      *net.TCPAddr
-	EncryptionTable *Encryption.Table
-	device          int // 1 is server 0 is local
+	localHost  *net.TCPAddr
+	serverHost *net.TCPAddr
+	device     int // 1 is server 0 is local
 }
 
+/**
+   This is the constructor for ServerProxy
+   It just have local tcp addr because it hasn't know
+   the remote tcp addr yet
+**/
 func NewServerProxy(local string) (*Proxy, error) {
 	// as a server we don't need ip address just port
 	addr0, err := net.ResolveTCPAddr("tcp4", local)
 	if err != nil {
 		return nil, err
 	}
-	return &Proxy{LocalHost: addr0, ServerHost: nil, EncryptionTable: Encryption.NewEmptyEncryptionTable(), device: Server}, nil
+	return &Proxy{localHost: addr0, serverHost: nil, device: Server}, nil
 }
 
+/**
+   This is the constructor for LocalProxy
+   It has both local and remote/server tcp addr
+   Local is for user application and server is for server proxy
+**/
 func NewLocalProxy(local, server string) (*Proxy, error) {
-	rand.Seed(time.Now().Unix())
 	//rand.Seed(0)
 	// as a server we don't need ip address just port
 	addr0, err := net.ResolveTCPAddr("tcp", local)
@@ -38,36 +52,75 @@ func NewLocalProxy(local, server string) (*Proxy, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Proxy{LocalHost: addr0, ServerHost: addr1, EncryptionTable: Encryption.NewEncryptionTable(), device: Local}, nil
+	return &Proxy{localHost: addr0, serverHost: addr1, device: Local}, nil
 }
 
+/**
+   Simple getter for localhost
+**/
+func (p Proxy) GetLocalHost() *net.TCPAddr {
+	return p.localHost
+}
+
+/**
+   Simple getter for serverhost
+**/
+func (p Proxy) GetServerHost() *net.TCPAddr {
+	if p.serverHost == nil || p.device == Server {
+		return nil
+	}
+	return p.serverHost
+}
+
+/**
+    Simple setter for serverhost
+**/
+func (p *Proxy) SetServerHost(copy *net.TCPAddr) error {
+	if p.device == Server {
+		return errors.New("") //todo some error
+	}
+	p.serverHost = copy
+	return nil
+}
+
+/**
+	Simple setter for localhost
+**/
+func (p *Proxy) SetLocalHost(copy *net.TCPAddr) error {
+	p.localHost = copy
+	return nil
+}
+
+/**
+    Return this proxy is local or server
+**/
+func (p Proxy) GetDevice() int {
+	return p.device
+}
+
+/**
+  This function help server proxy to connect to real server
+  The last two bytes is port number
+  First to get ATYP either ipv4, ipv6 or Domain name
+  For ipv4 and ipv6 it starts from 4 to it's length
+  For domain name it starts from 5 until first byte of port
+  (starts from 5 because 4 is used for indicating length)
+**/
 func (p *Proxy) ConnectToRealServer(request []byte, length int) *net.TCPAddr {
-	Logging.NormalLogger.Println("going to connect to real server")
-	Logging.NormalLogger.Println("request ", request, "length ", length)
 	port := int(binary.BigEndian.Uint16(request[length-2:]))
-	Logging.NormalLogger.Println("get port", port)
 	var ip []byte
 	if request[3] == 0x1 {
-		Logging.NormalLogger.Println("ipv4 request")
 		ip = request[4 : 4+net.IPv4len]
 	} else if request[3] == 0x3 {
-		Logging.NormalLogger.Println("0x3 request")
 		ip1, err := net.ResolveIPAddr("ip", string(request[5:length-2]))
 		if err != nil {
 			return nil
 		}
 		ip = ip1.IP
 	} else if request[3] == 0x4 {
-		Logging.NormalLogger.Println("ipv6 request")
 		ip = request[4 : 4+net.IPv6len]
 	}
 	return &net.TCPAddr{
 		IP:   ip,
 		Port: port}
-}
-func (p *Proxy) SetServerHost(copy *net.TCPAddr) {
-	p.ServerHost = copy
-}
-func (p *Proxy) SetLocalHost(copy *net.TCPAddr) {
-	p.LocalHost = copy
 }

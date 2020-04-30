@@ -1,85 +1,124 @@
 package Core
 
+/**
+  Author: JiaCheng Yang && Wenkai Zheng
+  This file is used for representing Connection handle struct
+  All methods and constructor are in this file
+**/
 import (
+	"Encryption"
 	"Logging"
 	"errors"
 	"net"
+	"sync/atomic"
 )
 
+/**
+   Each TcpConn is wokring as same way as socket,and they can read write directly.
+   Each complete is used for joining thread
+   Each isRunning is used for checking proxy's status
+   Encryption table is used for decode and encode
+**/
 type ConnectionHandler struct {
-	proxy             *Proxy
-	localTcpConn      *net.TCPConn
-	serverTcpConn     *net.TCPConn
-	localTcpComplete  chan int
-	serverTcpComplete chan int
-	isLocalRunning    bool
-	isServerRunning   bool
+	localTcpConn          *net.TCPConn
+	serverTcpConn         *net.TCPConn
+	localTcpComplete      chan int
+	serverTcpComplete     chan int
+	isLocalRunning        bool
+	isServerRunning       bool
+	device                int
+	encryptionTable       *Encryption.Table
+	isLocalTcpConnClosed  int32
+	isServerTcpConnClosed int32
 }
 
-func NewConnectionHandler(proxy *Proxy, local, server *net.TCPConn) *ConnectionHandler {
+/**
+   Simple constructor for connection handler
+**/
+func NewConnectionHandler(local, server *net.TCPConn, device int, table *Encryption.Table) *ConnectionHandler {
 	return &ConnectionHandler{
-		proxy:             proxy,
-		localTcpConn:      local,
-		serverTcpConn:     server,
-		localTcpComplete:  make(chan int),
-		serverTcpComplete: make(chan int),
-		isLocalRunning:    false,
-		isServerRunning:   false,
+		localTcpConn:          local,
+		serverTcpConn:         server,
+		localTcpComplete:      make(chan int),
+		serverTcpComplete:     make(chan int),
+		isLocalRunning:        false,
+		isServerRunning:       false,
+		device:                device,
+		encryptionTable:       table,
+		isLocalTcpConnClosed:  0,
+		isServerTcpConnClosed: 0,
 	}
 }
 
-func (h *ConnectionHandler) dealAsServer() error {
-	Logging.NormalLogger.Print("Going to deal as server ")
-	Logging.NormalLogger.Println(*h)
+/**
+   We assgin proxy's corrected device and type to transfer function in core.go
+   When there is any error occure we will close this connection and
+   join the parent thread (read from left to right ) app to remote server
+**/
+
+func (h *ConnectionHandler) transferRequest() error {
+	Logging.NormalLogger.Print("Going to transfer request ")
 	if h.isServerRunning {
 		return errors.New("server is already running")
 	}
 	h.isServerRunning = true
 	h.serverTcpComplete <- 0
-	var device, t = h.proxy.device, type0
-	Transfer(h.proxy, h.localTcpConn, h.serverTcpConn, device, t)
+	Transfer(h.encryptionTable, h.localTcpConn, h.serverTcpConn, h.device, type0)
+	var e = h.closeLocalConnection()
+	Logging.NormalLogger.Print("deal as server terminates")
 	h.serverTcpComplete <- 0
-	return nil
+	return e
 }
 
-func (h *ConnectionHandler) dealAsClient() error {
-	Logging.NormalLogger.Print("Going to deal as client ")
-	Logging.NormalLogger.Println(*h)
+/**
+   We assgin proxy's corrected device and type to transfer function in core.go
+   When there is any error occure we will close this connection and
+   join the parent thread (read from right to left ) remote server to app
+**/
+func (h *ConnectionHandler) transferRespond() error {
+	Logging.NormalLogger.Print("Going to transfer respond ")
 	if h.isLocalRunning {
 		return errors.New("client is already running")
 	}
 	h.isLocalRunning = true
 	h.localTcpComplete <- 0
-	var device, t int = h.proxy.device, type1
-	Transfer(h.proxy, h.serverTcpConn, h.localTcpConn, device, t)
+	Transfer(h.encryptionTable, h.serverTcpConn, h.localTcpConn, h.device, type1)
+	var e = h.closeServerConnection()
+	Logging.NormalLogger.Print("deal as client terminates")
 	h.localTcpComplete <- 0
-	return nil
+	return e
 }
 
-func (h *ConnectionHandler) DealAsBoth() {
+/**
+   Parent thread for response and request network data
+   Simple call response and request thread and wait unit complete( call wait function )
+   Makesure response and request thread are running before waiting
+**/
+func (h *ConnectionHandler) TransferData() {
 	go func() {
-		if err := h.dealAsServer(); err != nil {
-			Logging.ErrorLogger.Fatal(err)
+		if err := h.transferRequest(); err != nil {
+			Logging.ErrorLogger.Println(err)
 		}
 	}()
 	go func() {
-		if err := h.dealAsClient(); err != nil {
-			Logging.ErrorLogger.Fatal(err)
+		if err := h.transferRespond(); err != nil {
+			Logging.ErrorLogger.Println(err)
 		}
 	}()
 	<-h.localTcpComplete
 	<-h.serverTcpComplete
 	if err := h.Wait(); err != nil {
-		Logging.ErrorLogger.Fatal(err)
-	}
-	if err := h.Close(); err != nil {
-		Logging.ErrorLogger.Fatal(err)
+		Logging.ErrorLogger.Println(err)
 	}
 }
 
+/**
+   This functions will be called after response and request thread is running
+   And it will finished after  response and request thread are finished
+   Makesure response and request thread is already running in here
+**/
 func (h *ConnectionHandler) Wait() error {
 	Logging.NormalLogger.Print("Going to wait client and server ")
-	Logging.NormalLogger.Println(*h)
 	if !h.isLocalRunning {
 		return errors.New("client is not running")
 	}
@@ -93,24 +132,34 @@ func (h *ConnectionHandler) Wait() error {
 	return nil
 }
 
-func (h *ConnectionHandler) GetProxy() *Proxy {
-	return h.proxy
+/**
+   Simple close Tcp connection
+**/
+func (h *ConnectionHandler) Abort() {
+	_ = h.closeLocalConnection()
+	_ = h.closeServerConnection()
 }
-
-func (h *ConnectionHandler) Close() error {
-	Logging.NormalLogger.Print("Going to close client and server ")
-	Logging.NormalLogger.Println(*h)
-	if h.isServerRunning {
-		return errors.New("need to wait server first")
+/**
+   This function will close Tcp Conn safely 
+**/
+func (h *ConnectionHandler) closeLocalConnection() error {
+	if swapped := atomic.CompareAndSwapInt32(&(h.isLocalTcpConnClosed), 0, 1); swapped {
+		if err := h.localTcpConn.Close(); err != nil {
+			Logging.NormalLogger.Print("cannot close local TCP conn")
+			return err
+		}
 	}
-	if h.isLocalRunning {
-		return errors.New("need to wait local first")
-	}
-	if err := h.serverTcpConn.Close(); err != nil {
-		return err
-	}
-	if err := h.localTcpConn.Close(); err != nil {
-		return err
+	return nil
+}
+/**
+   This function will close Tcp Conn safely 
+**/
+func (h *ConnectionHandler) closeServerConnection() error {
+	if swapped := atomic.CompareAndSwapInt32(&(h.isServerTcpConnClosed), 0, 1); swapped {
+		if err := h.serverTcpConn.Close(); err != nil {
+			Logging.NormalLogger.Print("cannot close server TCP conn")
+			return err
+		}
 	}
 	return nil
 }
