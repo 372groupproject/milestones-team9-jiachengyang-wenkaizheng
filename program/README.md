@@ -27,8 +27,15 @@ How to set up chrome :
   - Protocol: SOCKS5 
   - Server: 127.0.0.1
   - Port: 5209 (as local_port defined in config.json)  
-- make sure you are using proxy rather than direct connection  
-- do not forget to run local proxy
+- make sure you are using proxy rather than direct connection
+- go to project folder and make
+- run server prxoy ./mySSServer
+- run local proxy ./mySSLocal
+- if you want to try run the server proxy in server (other IP rather than 127.0.0.1),email us
+  wenkaizheng@email.arizona.edu
+  jiachengyang@email.arizona.edu
+  we will send you a new config json file
+- do not forget to run local proxy before run server proxy
 
 Browsers will send specific network packets to local proxy, and then local proxy transfers them to sever proxy.
  Server Proxy will respond them according to packets it receives. 
