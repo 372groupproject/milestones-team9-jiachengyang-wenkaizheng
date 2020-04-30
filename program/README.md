@@ -20,7 +20,7 @@ We also have heartbeat message mechanism to detect user is online or offline, an
 
 For users part, they need to set up their chrome with socks5 protocol.   
 Socks5 : https://tools.ietf.org/html/rfc1928  
-How to set up chrome :   
+How to set up chrome and run each proxy :   
 - install the Chrome extension SwitchyOmega  
 - open options  
 - added proxy:
